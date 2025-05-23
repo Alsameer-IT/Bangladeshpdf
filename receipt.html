@@ -316,14 +316,21 @@
         // Use the ref value directly as the reference number (no "721" prefix)
         const referenceNumber = params.get('ref') || 'N/A';
 
+        // Function to add commas to a number
+        const addCommas = (numStr) => {
+            const parts = numStr.split('.');
+            const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+        };
+
         const data = {
             date: params.get('date') || 'N/A',
             referenceNumber: referenceNumber,
-            sendAmount: params.get('payInAmount') ? params.get('payInAmount').replace(/ BND$/, '') : 'N/A',
-            serviceFee: params.get('serviceCharge') ? params.get('serviceCharge').replace(/ BND$/, '') : 'N/A',
-            totalPaid: params.get('totalAmount') ? params.get('totalAmount').replace(/ BND$/, '') : 'N/A',
-            payoutAmount: params.get('amount') ? `${params.get('amount')} BDT` : 'N/A',
-            exchangeRate: params.get('exchangeRate') ? `1 = ${params.get('exchangeRate').replace(/ BDT$/, '')}` : 'N/A',
+            sendAmount: params.get('payInAmount') ? addCommas(params.get('payInAmount').replace(/ BND$/, '')) : 'N/A',
+            serviceFee: params.get('serviceCharge') ? addCommas(params.get('serviceCharge').replace(/ BND$/, '')) : 'N/A',
+            totalPaid: params.get('totalAmount') ? addCommas(params.get('totalAmount').replace(/ BND$/, '')) : 'N/A',
+            payoutAmount: params.get('amount') ? `${addCommas(params.get('amount'))} BDT` : 'N/A',
+            exchangeRate: params.get('exchangeRate') ? `1 = ${addCommas(params.get('exchangeRate').replace(/ BDT$/, ''))}` : 'N/A',
             beneficiaryName: params.get('beneficiaryName') || 'N/A',
             beneficiaryMobile: params.get('beneficiaryMobile') || 'N/A',
             bankName: params.get('bankName') || 'N/A',
